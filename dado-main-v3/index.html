@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campo&Dados — Plataforma de Dados de Pesquisa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+<link rel="stylesheet" href="lib/leaflet/leaflet.css">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body class="usuario">
+
+<!-- =============== LOGIN =============== -->
+<section id="login">
+  <div class="login-arte">
+    <div class="logo" style="padding:0">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#2F6B45"/><path d="M17 26V12M17 16c-4-1-6-4-6-7 4 0 6 3 6 7zm0 3c4-1 7-4 7-8-4 0-7 3-7 8z" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M7 27h20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <div>Campo&amp;Dados<small>Plataforma de dados de pesquisa</small></div>
+    </div>
+    <div>
+      <h2>Do campo à estatística, num só lugar.</h2>
+      <p>Planeje campanhas, centralize os dados de solo e vegetação e gere as estatísticas do ensaio em segundos.</p>
+    </div>
+    <svg class="parcelas" viewBox="0 0 560 300" aria-hidden="true" id="arteParcelas"></svg>
+  </div>
+  <div class="login-form">
+    <p class="retomando-msg" id="retomandoMsg">Entrando…</p>
+    <div id="formLogin">
+      <div class="logo logo-login"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#2F6B45"/><path d="M17 26V12M17 16c-4-1-6-4-6-7 4 0 6 3 6 7zm0 3c4-1 7-4 7-8-4 0-7 3-7 8z" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M7 27h20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div>Campo&amp;Dados<small>Plataforma de dados de pesquisa</small></div></div>
+      <h1>Entrar</h1>
+      <p class="sub">Acesse com sua conta institucional.</p>
+      <label class="fld"><span>E-mail</span><input type="email" id="email" placeholder="seu.nome@pesquisa.org" autocomplete="username" required></label>
+      <label class="fld"><span>Senha</span>
+        <div class="campo-senha"><input type="password" id="senha" placeholder="Digite sua senha" autocomplete="current-password" required>
+          <button type="button" id="verSenha" aria-label="Mostrar senha" title="Mostrar senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div></label>
+      <label class="manter"><input type="checkbox" id="manterConectado"> Manter conectado neste computador</label>
+      <p class="erro-login" id="erroLogin" role="alert"></p>
+      <button class="btn bloco" type="button" id="btnEntrar">Entrar</button>
+      <p class="rodape-login">Não tem acesso ou esqueceu a senha? Fale com o administrador da plataforma.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =============== APP =============== -->
+<div id="app">
+  <!-- Barra superior (só no celular) -->
+  <header class="barra-mobile">
+    <button type="button" id="btnMenu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuLateral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="logo"><svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#2F6B45"/><path d="M17 26V12M17 16c-4-1-6-4-6-7 4 0 6 3 6 7zm0 3c4-1 7-4 7-8-4 0-7 3-7 8z" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M7 27h20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div>Campo&amp;Dados</div></div>
+    <span class="avatar" id="avatarMobile">AR</span>
+  </header>
+  <div class="veu" id="veuMenu"></div>
+  <aside id="menuLateral">
+    <div class="logo">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#2F6B45"/><path d="M17 26V12M17 16c-4-1-6-4-6-7 4 0 6 3 6 7zm0 3c4-1 7-4 7-8-4 0-7 3-7 8z" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M7 27h20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <div>Campo&amp;Dados<small>Dados de pesquisa</small></div>
+    </div>
+    <nav class="menu">
+      <button data-p="geral" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Visão geral</button>
+      <button data-p="camp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Campanhas de campo</button>
+      <button data-p="analise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 6v12M12 8v12"/><rect x="4" y="8" width="4" height="7"/><rect x="10" y="11" width="4" height="5"/><rect x="16" y="9" width="4" height="6"/></svg>Solo e vegetação</button>
+      <button data-p="usuarios" class="so-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.8c2 .7 3.2 2.5 3.5 5.2"/></svg>Usuários</button>
+    </nav>
+    <p class="sync local" id="statusSync"></p>
+    <div class="conta">
+      <span class="avatar" id="avatar">AR</span>
+      <div><b id="nomeUsuario">Ana Ribeiro</b><small id="nivelUsuario">Administrador</small><button type="button" class="link-senha" id="trocarSenha">Trocar senha</button></div>
+      <button class="sair" id="sair">Sair</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- VISÃO GERAL -->
+    <section class="pagina on" id="p-geral">
+      <div class="topo"><div><h1 id="saudacao">Bom dia</h1><p>Resumo das campanhas e do ensaio mais recente.</p></div></div>
+      <div class="kpis" id="kpisGeral"></div>
+      <div class="duas">
+        <div class="cartao">
+          <h3>Produtividade média por dose de N</h3>
+          <p class="desc">Média ± desvio padrão entre os blocos, por espessura do revestimento.</p>
+          <div id="graficoGeral" class="graf" style="height:320px"></div>
+        </div>
+        <div class="cartao">
+          <h3>Próximas campanhas</h3>
+          <p class="desc">Atividades de campo previstas.</p>
+          <div id="proximas"></div>
+          <div id="mapaMini" style="margin-top:14px;height:200px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMPANHAS -->
+    <section class="pagina" id="p-camp">
+      <div class="topo">
+        <div><h1>Campanhas de campo</h1><p>Campanhas realizadas e previstas, com localização das áreas.</p></div>
+        <div class="acoes">
+          <div class="seg" id="filtroCamp">
+            <button aria-pressed="true" data-f="todas">Todas</button><button aria-pressed="false" data-f="feita">Realizadas</button><button aria-pressed="false" data-f="futura">Previstas</button>
+          </div>
+          <button class="btn so-gerente" id="btnNovaCamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Nova campanha</button>
+        </div>
+      </div>
+      <div class="lado">
+        <div class="cartao"><ul class="camp-lista" id="listaCamp"></ul></div>
+        <div class="cartao">
+          <div class="modo-mapa" id="modoMapa">Clique no mapa para marcar o local da nova campanha.</div>
+          <div id="mapa"></div>
+          <div class="legenda"><span><i style="background:#2F6B45"></i>Realizada</span><span><i style="background:#3B6890"></i>Prevista</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANÁLISE -->
+    <section class="pagina" id="p-analise">
+      <div class="topo">
+        <div><h1>Solo e vegetação</h1><p id="introAnalise"></p><p class="origem" id="origemDados"></p></div>
+        <div class="acoes">
+          <button class="btn sec so-gerente" id="btnImportar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg>Importar planilha</button>
+          <input type="file" id="arq" accept=".xlsx,.xls,.csv">
+          <button class="btn sec perigo-sec so-gerente" id="btnRemoverImport" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Remover dados importados</button>
+          <button class="btn" id="btnBaixar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M4 15v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg>Baixar estatísticas</button>
+        </div>
+      </div>
+      <div class="cartao sem-dados" id="semDados" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>
+        <h3>Nenhum dado importado</h3>
+        <p class="desc">Importe uma planilha (.xlsx, .xls ou .csv) com as colunas <b>Block</b>, <b>Thickness</b> e <b>N_rate</b> para ver gráficos e estatísticas.</p>
+        <button class="btn so-gerente" type="button" id="btnImportarVazio">Importar planilha</button>
+        <p class="nota so-usuario-nota">Peça a um gerente ou administrador para importar os dados.</p>
+      </div>
+      <div class="lado" id="corpoAnalise">
+        <div class="cartao">
+          <label class="ctl-label" for="selVar">Variável</label>
+          <select id="selVar" class="ctl"></select>
+          <label class="ctl-label" for="selGrupo">Agrupar por</label>
+          <select id="selGrupo" class="ctl">
+            <option value="N_rate">Dose de N</option>
+            <option value="Thickness">Espessura do revestimento</option>
+            <option value="Trat">Tratamento (espessura × dose)</option>
+            <option value="Block">Bloco</option>
+          </select>
+          <span class="ctl-label">Espessura</span><div class="checks" id="fEsp"></div>
+          <span class="ctl-label">Blocos</span><div class="checks" id="fBloco"></div>
+          <span class="ctl-label">Doses de N</span><div class="checks" id="fDose"></div>
+        </div>
+        <div>
+          <div class="kpis" id="kpisVar"></div>
+          <div class="cartao">
+            <div class="cab">
+              <div><h3 id="tituloGraf"></h3><p class="desc" id="descGraf"></p></div>
+              <div class="seg" id="tipoGraf"><button aria-pressed="true" data-t="box">Boxplot</button><button aria-pressed="false" data-t="media">Média ± DP</button></div>
+            </div>
+            <div id="grafico" class="graf graf-grande" style="height:420px"></div>
+          </div>
+          <div class="cartao" style="margin-top:18px">
+            <h3>Estatística descritiva</h3>
+            <p class="desc">Desvio padrão amostral. CV acima de 20% em vermelho indica alta variabilidade entre parcelas.</p>
+            <div class="tabela"><table id="tabStats"></table></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USUÁRIOS -->
+    <section class="pagina" id="p-usuarios">
+      <div class="topo">
+        <div><h1>Usuários e permissões</h1><p>Defina quem acessa a plataforma e o que cada pessoa pode fazer.</p></div>
+        <div class="acoes"><button class="btn" id="btnConvidar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Convidar usuário</button></div>
+      </div>
+      <div class="kpis kpis-perfis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi"><span>Administrador</span><strong>Acesso total</strong><small>Gerencia usuários e todos os dados</small></div>
+        <div class="kpi"><span>Gerente</span><strong>Edição</strong><small>Cadastra campanhas e importa dados</small></div>
+        <div class="kpi"><span>Usuário</span><strong>Consulta</strong><small>Visualiza dashboards e baixa relatórios</small></div>
+      </div>
+      <div class="cartao tabela tabela-usuarios"><table><thead><tr><th class="e">Nome</th><th class="e">E-mail</th><th class="e">Nível de acesso</th><th class="e">Último acesso</th><th class="e">Ações</th></tr></thead><tbody id="tabUsuarios"></tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<!-- Modais -->
+<div class="fundo-modal" id="modalCamp"><div class="modal" id="formCamp">
+  <h3 id="tituloCamp">Nova campanha</h3><p class="desc" id="descCamp">O local foi marcado no mapa. Preencha os dados da campanha.</p>
+  <label class="fld"><span>Nome da campanha</span><input id="cNome" required placeholder="Ex.: Amostragem de solo — safra 2026/27"></label>
+  <label class="fld"><span>Período</span><input id="cData" required placeholder="Ex.: Mai/2027"></label>
+  <label class="fld"><span>Status</span><select id="cStatus"><option value="futura">Prevista</option><option value="feita">Realizada</option></select></label>
+  <label class="fld"><span>Data de início</span><input id="cInicio" type="date"></label>
+  <label class="fld"><span>Descrição</span><input id="cDesc" placeholder="Ex.: coleta 0–20 cm em 30 pontos"></label>
+  <div class="local-camp"><span id="cLocal"></span><button type="button" class="acao" id="btnMoverCamp">Alterar local no mapa</button></div>
+  <div class="rodape"><button type="button" class="btn sec" data-fechar>Cancelar</button><button type="button" class="btn" id="btnSalvarCamp">Salvar campanha</button></div>
+</div></div>
+<div class="fundo-modal" id="modalExcluir"><div class="modal">
+  <h3>Excluir campanha?</h3><p class="desc" id="textoExcluir"></p>
+  <div class="rodape"><button type="button" class="btn sec" data-fechar>Cancelar</button><button type="button" class="btn perigo" id="btnConfirmaExcluir">Excluir</button></div>
+</div></div>
+<div class="fundo-modal" id="modalUser"><div class="modal" id="formUser">
+  <h3 id="tituloUser">Convidar usuário</h3><p class="desc" id="descUser">A pessoa recebe um e-mail para criar a senha.</p>
+  <label class="fld"><span>Nome</span><input id="uNome" required></label>
+  <label class="fld"><span>E-mail</span><input id="uEmail" type="email" required></label>
+  <label class="fld" id="campoSenhaUser"><span>Senha</span><input id="uSenha" type="text" autocomplete="new-password" placeholder="Senha de acesso"><small class="dica-senha" id="dicaSenhaUser"></small></label>
+  <label class="fld"><span>Nível de acesso</span><select id="uNivel"><option value="usuario">Usuário</option><option value="gerente">Gerente</option><option value="admin">Administrador</option></select></label>
+  <div class="rodape"><button type="button" class="btn sec" data-fechar>Cancelar</button><button type="button" class="btn" id="btnEnviarConvite">Enviar convite</button></div>
+</div></div>
+<div class="fundo-modal" id="modalExcluirUser"><div class="modal">
+  <h3>Excluir usuário?</h3><p class="desc" id="textoExcluirUser"></p>
+  <div class="rodape"><button type="button" class="btn sec" data-fechar>Cancelar</button><button type="button" class="btn perigo" id="btnConfirmaExcluirUser">Excluir usuário</button></div>
+</div></div>
+<div class="fundo-modal" id="modalRemoverImport"><div class="modal">
+  <h3>Remover dados importados?</h3><p class="desc" id="textoRemoverImport"></p>
+  <div class="rodape"><button type="button" class="btn sec" data-fechar>Cancelar</button><button type="button" class="btn perigo" id="btnConfirmaRemoverImport">Remover</button></div>
+</div></div>
+<div class="fundo-modal" id="modalSenha"><div class="modal">
+  <h3>Trocar senha</h3><p class="desc">Escolha uma nova senha com pelo menos 6 caracteres.</p>
+  <label class="fld"><span>Nova senha</span><input id="novaSenha" type="password" autocomplete="new-password"></label>
+  <label class="fld"><span>Repita a nova senha</span><input id="novaSenha2" type="password" autocomplete="new-password"></label>
+  <div class="rodape"><button type="button" class="btn sec" data-fechar>Cancelar</button><button type="button" class="btn" id="btnSalvarSenha">Salvar senha</button></div>
+</div></div>
+<div id="toast" role="status"></div>
+
+<!-- Bibliotecas (locais, na pasta lib) -->
+<script src="lib/leaflet/leaflet.js"></script>
+<script src="lib/plotly.min.js"></script>
+<script src="lib/xlsx.full.min.js"></script>
+<!-- Google Planilhas (banco de dados) -->
+<script src="js/planilha-config.js"></script>
+<!-- Dados e aplicação -->
+<script src="js/dados.js"></script>
+<script src="js/app.js"></script>
+<script src="js/planilha.js"></script>
+</body>
+</html>
